@@ -40,9 +40,16 @@ void loop()
     MQTTConnect();
   }
 
-  client.publish(topic, ".");
-  // Serial.println(bme.readTemperature());
-  delay(5000);
+  char payload[64];
+
+  float outTemp = bme.readTemperature();
+  float outHum = bme.readPressure();
+
+  sprintf(payload, "INTE:%.2f,BAROMETER:%.2f", outTemp, outHum);
+
+  client.publish(topic, payload);
+  Serial.println("Messaggio inviato");
+  delay(100000);
 }
 
 void WiFiConnect()
