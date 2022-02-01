@@ -1,7 +1,9 @@
 #include <Arduino.h>
 
 #include <ESP8266WiFi.h>
-#include <PubSubClient.h>
+#include <PubSubClient.h> // mqtt lib
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BMP280.h>
 
 #include <secret.h> // keep hidden the wifi ssid and password
 
@@ -16,8 +18,11 @@ IPAddress broker(192, 168, 1, 7);
 WiFiClient wclient;
 PubSubClient client(wclient);
 
+Adafruit_BMP280 bme;
+
 void WiFiConnect();
 void MQTTConnect();
+void sensorConnect();
 
 void setup()
 {
@@ -25,6 +30,7 @@ void setup()
 
   WiFiConnect();                  // connect to wifi
   client.setServer(broker, 1883); // set the mqtt server
+  sensorConnect();                // connect to bmp280 sensor
 }
 
 void loop()
@@ -35,6 +41,7 @@ void loop()
   }
 
   client.publish(topic, ".");
+  // Serial.println(bme.readTemperature());
   delay(5000);
 }
 
@@ -67,4 +74,15 @@ void MQTTConnect()
 
     delay(500);
   }
+}
+
+void sensorConnect()
+{
+  Serial.print("Connessione BMP280...");
+  while (!bme.begin(0x76))
+  {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println(" Sensore connesso");
 }
