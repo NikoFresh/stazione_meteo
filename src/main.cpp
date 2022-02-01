@@ -47,27 +47,27 @@ void loop()
 
 void WiFiConnect()
 {
-  Serial.print("Connessione al wifi");
+  Serial.print("Connessione wifi...");
   WiFi.begin(ssid, psw);
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
     Serial.print(".");
   }
-  Serial.print("\nConnesso. IP: ");
+  Serial.print(" Connesso. IP: ");
   Serial.println(WiFi.localIP());
 }
 
 void MQTTConnect()
 {
-  Serial.print("Connessione MQTT");
+  Serial.print("Connessione MQTT...");
   while (!client.connected())
   {
     Serial.print(".");
 
     if (client.connect(id, mqttUser, mqttPass))
     {
-      Serial.print("\nConnesso al broker MQTT. Topic: ");
+      Serial.print(" Connesso al broker MQTT. Topic: ");
       Serial.println(topic);
       return;
     }
