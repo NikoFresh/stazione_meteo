@@ -43,13 +43,14 @@ void loop()
   char payload[64];
 
   float outTemp = bme.readTemperature();
-  float outHum = bme.readPressure();
+  float outHum = bme.readPressure() / 100; // save the pressure as hPa
+  float altitude = bme.readAltitude();
 
-  sprintf(payload, "INTE:%.2f,BAROMETER:%.2f", outTemp, outHum);
+  sprintf(payload, "{ \"temp1\": \"%.2f\", \"pressure\": \"%.2f\", \"altitude\": \"%.2f\" }", outTemp, outHum, altitude);
 
   client.publish(topic, payload);
   Serial.println("Messaggio inviato");
-  delay(100000);
+  delay(30000);
 }
 
 void WiFiConnect()
