@@ -50,7 +50,8 @@ void loop()
 
   client.publish(topic, payload);
   Serial.println("Messaggio inviato");
-  delay(30000);
+
+  ESP.deepSleep(30e6); // go into deepsleep for 30 seconds
 }
 
 void WiFiConnect()
