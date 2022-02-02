@@ -51,6 +51,7 @@ void loop()
   client.publish(topic, payload);
   Serial.println("Messaggio inviato");
 
+  delay(50);           // without it the program wont send out the payload
   ESP.deepSleep(30e6); // go into deepsleep for 30 seconds
 }
 
