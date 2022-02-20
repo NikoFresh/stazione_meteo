@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <cmath>
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h> // mqtt lib
@@ -13,6 +14,7 @@ const char *id = "current";
 const char *topic = "stazione_meteo";
 const char *mqttUser = MQTTUSER;
 const char *mqttPass = MQTTPSW;
+const int altitude = 785; // altitude in meters
 
 IPAddress broker(192, 168, 1, 7);
 WiFiClient wclient;
@@ -43,10 +45,12 @@ void loop()
   char payload[64];
 
   float outTemp = bme.readTemperature();
-  float outHum = bme.readPressure() / 100; // save the pressure as hPa
-  float altitude = bme.readAltitude();
+  float outPress = bme.readPressure() / 100; // save the pressure as hPa
+  float outAltitude = bme.readAltitude();
 
-  sprintf(payload, "{ \"temp1\": \"%.2f\", \"pressure\": \"%.2f\", \"altitude\": \"%.2f\" }", outTemp, outHum, altitude);
+  float barometer = outPress * pow((1 - (0.0065 * altitude) / (outTemp + 0.0065 * altitude + 273.15)), -5.257);
+
+  sprintf(payload, "{ \"temp1\": \"%.2f\", \"pressure\": \"%.2f\", \"barometer\": \"%.2f\", \"altitude\": \"%.2f\" }", outTemp, outPress, barometer, outAltitude);
 
   client.publish(topic, payload);
   Serial.println("Messaggio inviato");
