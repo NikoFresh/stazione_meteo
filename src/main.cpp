@@ -4,7 +4,7 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h> // mqtt lib
 #include <Adafruit_Sensor.h>
-#include <Adafruit_BMP280.h>
+#include <Adafruit_BME280.h>
 
 #include <secret.h> // keep hidden the wifi ssid and password
 
@@ -20,7 +20,7 @@ IPAddress broker(192, 168, 1, 7);
 WiFiClient wclient;
 PubSubClient client(wclient);
 
-Adafruit_BMP280 bme;
+Adafruit_BME280 bme;
 
 void WiFiConnect();
 void MQTTConnect();
@@ -32,7 +32,7 @@ void setup()
 
   WiFiConnect();                  // connect to wifi
   client.setServer(broker, 1883); // set the mqtt server
-  sensorConnect();                // connect to bmp280 sensor
+  sensorConnect();                // connect to bme280 sensor
 }
 
 void loop()
@@ -46,11 +46,12 @@ void loop()
 
   float outTemp = bme.readTemperature();
   float outPress = bme.readPressure() / 100; // save the pressure as hPa
-  float outAltitude = bme.readAltitude();
+  // float outAltitude = bme.readAltitude();
+  float outHum = bme.readHumidity();
 
   float barometer = outPress * pow((1 - (0.0065 * altitude) / (outTemp + 0.0065 * altitude + 273.15)), -5.257);
 
-  sprintf(payload, "{ \"temp1\": \"%.2f\", \"pressure\": \"%.2f\", \"barometer\": \"%.2f\", \"altitude\": \"%.2f\" }", outTemp, outPress, barometer, outAltitude);
+  sprintf(payload, "{ \"temp1\": \"%.2f\", \"pressure\": \"%.2f\", \"barometer\": \"%.2f\", \"humidity\": \"%.2f\" }", outTemp, outPress, barometer, outHum);
 
   client.publish(topic, payload);
   Serial.println("Messaggio inviato");
@@ -92,7 +93,7 @@ void MQTTConnect()
 
 void sensorConnect()
 {
-  Serial.print("Connessione BMP280...");
+  Serial.print("Connessione BME280...");
   while (!bme.begin(0x76))
   {
     Serial.print(".");
