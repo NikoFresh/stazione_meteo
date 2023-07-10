@@ -26,8 +26,16 @@ wifi:
 
 captive_portal:
 
+# MQTT
+mqtt:
+  broker: 192.168.1.7
+  username: mqtt_user
+  password: !secret mqtt_psw
+
+
 # I2C
 i2c:
   sda: D1
   scl: D2
   scan: true
+
