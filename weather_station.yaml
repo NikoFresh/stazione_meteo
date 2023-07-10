@@ -39,3 +39,14 @@ i2c:
   scl: D2
   scan: true
 
+sensor:
+  # BME 280
+  - platform: bme280
+    temperature:
+      name: "BME280 Temperature"
+    pressure:
+      name: "BME280 Pressure"
+    humidity:
+      name: "BME280 Humidity"
+    address: 0x76
+    update_interval: 60s
