@@ -8,8 +8,8 @@ esp8266:
 logger:
 
 # Enable Home Assistant API
-api:
-  password: !secret psw
+# api:
+#  password: !secret psw
 
 ota:
   safe_mode: true
