@@ -32,11 +32,10 @@ mqtt:
   username: mqtt_user
   password: !secret mqtt_psw
 
-
 # I2C
 i2c:
-  sda: D1
-  scl: D2
+  sda: D2
+  scl: D1
   scan: true
 
 sensor:
@@ -44,9 +43,33 @@ sensor:
   - platform: bme280
     temperature:
       name: "BME280 Temperature"
+      id: temperature
     pressure:
       name: "BME280 Pressure"
+      id: pressure
     humidity:
       name: "BME280 Humidity"
+      id: humidity
     address: 0x76
     update_interval: 60s
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: ESP IP Address
+      id: ip
+
+font:
+  - file: "gfonts://Lato"
+    id: lato
+    size: 15
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    # address: 0x78
+    lambda: |-
+      it.printf(0, 0, id(lato), "Wifi: %s", id(ip).state.c_str());
+      it.printf(0, 15, id(lato), "Temp: %.1f°C", id(temperature).state);
+      it.printf(0, 30, id(lato), "Hum: %.1f%%", id(humidity).state);
+      it.printf(0, 45, id(lato), "Press: %.1fhpa", id(pressure).state);
