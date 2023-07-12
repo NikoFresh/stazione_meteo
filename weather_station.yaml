@@ -67,7 +67,7 @@ font:
 display:
   - platform: ssd1306_i2c
     model: "SSD1306 128x64"
-    # address: 0x78
+    address: 0x3C
     lambda: |-
       it.printf(0, 0, id(lato), "Wifi: %s", id(ip).state.c_str());
       it.printf(0, 15, id(lato), "Temp: %.1f°C", id(temperature).state);
