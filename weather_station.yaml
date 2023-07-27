@@ -73,3 +73,13 @@ display:
       it.printf(0, 15, id(lato), "Temp: %.1f°C", id(temperature).state);
       it.printf(0, 30, id(lato), "Hum: %.1f%%", id(humidity).state);
       it.printf(0, 45, id(lato), "Press: %.1fhpa", id(pressure).state);
+
+interval:
+  - interval: 30s
+    then:
+      - mqtt.publish_json:
+          topic: weatherstation/live
+          payload: |-
+            root["outTemp"] = id(temperature).state;
+            root["outHumidity"] = id(humidity).state;
+            root["pressure"] = id(pressure).state;
