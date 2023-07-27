@@ -51,7 +51,7 @@ sensor:
       name: "BME280 Humidity"
       id: humidity
     address: 0x76
-    update_interval: 60s
+    update_interval: 30s
 
 text_sensor:
   - platform: wifi_info
